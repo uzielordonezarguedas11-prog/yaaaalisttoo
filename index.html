@@ -10,45 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Menú Desplegable Vertical por Click */
-        .dropdown { position: relative; display: inline-block; }
-        .dropdown-btn {
-            color: #fff; text-decoration: none; font-weight: 700; background: #0d9488;
-            padding: 6px 10px; border-radius: 6px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; border: none; white-space: nowrap;
-        }
-        
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background-color: #082f33;
-            min-width: 180px;
-            box-shadow: 0px 10px 25px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            z-index: 1000;
-            padding: 4px 0;
-            margin-top: 6px;
-            flex-direction: column;
-        }
-        .dropdown-content.show { display: flex !important; }
-        .dropdown-content a {
-            color: #ffffff !important;
-            padding: 9px 12px !important;
-            text-decoration: none;
-            display: block !important;
-            font-size: 12px !important;
-            font-weight: 600 !important;
-            background: transparent !important;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-            text-align: left;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        .dropdown-content a:last-child { border-bottom: none; }
-        .dropdown-content a:hover, .dropdown-content a:active { background-color: #0d9488 !important; }
-
         @media (max-width: 480px) {
             .hero { padding: 10px 0 25px !important; }
             .cards { margin-top: -10px; grid-template-columns: 1fr; }
@@ -58,19 +19,14 @@
 <body>
 <div class="hero">
     <div class="w" style="padding-top: 10px;">
-        <!-- Barra de navegación móvil ordenada -->
+        <!-- Barra de navegación móvil limpia sin categorías -->
         <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0, 0, 0, 0.25); padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); margin-bottom: 16px;">
             <a class="brand" href="index.html" style="display: flex; align-items: center; gap: 8px; color: #fff; text-decoration: none; font-weight: 800;">
                 <div class="logo" style="width: 34px; height: 34px; min-width: 34px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: linear-gradient(135deg, #34d399, #0f766e); color: #fff; font-weight: 800; font-size: 13px;">JS</div>
                 <span style="font-size: 14px; white-space: nowrap;">JS Tech</span>
             </a>
             <div style="display: flex; align-items: center; gap: 6px;">
-                <div class="dropdown">
-                    <button type="button" id="btnTiendaDropdown" class="dropdown-btn">🛍️ Tienda ▾</button>
-                    <div class="dropdown-content" id="menuCategorias">
-                        <a href="productos.html">✨ Ver Todo</a>
-                    </div>
-                </div>
+                <a href="productos.html" style="color: #fff; text-decoration: none; font-weight: 700; background: #0d9488; padding: 6px 12px; border-radius: 6px; font-size: 11px; white-space: nowrap;">🛍️ Tienda</a>
                 <a href="#contacto" style="color: #fff; text-decoration: none; font-weight: 700; background: rgba(255, 255, 255, 0.15); padding: 6px 10px; border-radius: 6px; font-size: 11px; white-space: nowrap;">Contacto</a>
             </div>
         </div>
@@ -142,7 +98,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { initializeFirestore, doc, getDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { initializeFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     
     const firebaseConfig = {
         apiKey: "AIzaSyBHdtd1YLq8z_cuVgUDx33Z088okq0Sriw",
@@ -157,34 +113,6 @@
     const db = initializeFirestore(app, { experimentalForceLongPolling: true });
     
     document.getElementById("yr").textContent = new Date().getFullYear();
-    const menuCat = document.getElementById("menuCategorias");
-    const btnTiendaDropdown = document.getElementById("btnTiendaDropdown");
-
-    btnTiendaDropdown.addEventListener("click", (e) => {
-        e.stopPropagation();
-        menuCat.classList.toggle("show");
-    });
-
-    window.addEventListener("click", () => {
-        if (menuCat.classList.contains("show")) {
-            menuCat.classList.remove("show");
-        }
-    });
-
-    menuCat.addEventListener("click", (e) => {
-        e.stopPropagation();
-    });
-    
-    onSnapshot(collection(db, "categories"), snapshot => {
-        let htmlMenu = `<a href="productos.html">✨ Ver Todo</a>`;
-        snapshot.forEach(docSnap => {
-            const data = docSnap.data();
-            if (data && data.nombre) {
-                htmlMenu += `<a href="productos.html?cat=${encodeURIComponent(data.nombre)}">📦 ${data.nombre}</a>`;
-            }
-        });
-        menuCat.innerHTML = htmlMenu;
-    });
 
     function esc(s) { return String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
     function fmt(t) {
